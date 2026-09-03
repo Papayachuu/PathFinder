@@ -1,0 +1,137 @@
+:root {
+  --ink: #16233a;
+  --ink-soft: #3b4a63;
+  --paper: #eef2ec;
+  --surface: #ffffff;
+  --surface-alt: #f6f7f1;
+  --accent: #b8863e;
+  --accent-dark: #93692c;
+  --accent-soft: #efe1c4;
+  --teal: #3e6259;
+  --teal-dark: #2c4740;
+  --teal-soft: #dce6e1;
+  --line: #d9dccf;
+  --muted: #6b7480;
+  --danger: #a6432b;
+  --danger-soft: #f3dfd8;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+.as-root {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "IBM Plex Sans", sans-serif;
+  min-height: 100%;
+}
+.as-serif {
+  font-family: "Fraunces", serif;
+}
+.as-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+.as-alt {
+  background: var(--surface-alt);
+}
+.as-muted {
+  color: var(--muted);
+}
+.as-soft {
+  color: var(--ink-soft);
+}
+.as-line {
+  border-color: var(--line);
+}
+.as-accent-text {
+  color: var(--accent-dark);
+}
+.as-teal-text {
+  color: var(--teal-dark);
+}
+.as-badge-accent {
+  background: var(--accent-soft);
+  color: var(--accent-dark);
+}
+.as-badge-teal {
+  background: var(--teal-soft);
+  color: var(--teal-dark);
+}
+.as-btn-primary {
+  background: var(--ink);
+  color: #fff;
+  border: 1px solid var(--ink);
+  transition: background 0.15s ease;
+}
+.as-btn-primary:hover {
+  background: var(--accent-dark);
+  border-color: var(--accent-dark);
+}
+.as-btn-outline {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.as-btn-outline:hover {
+  border-color: var(--ink);
+  background: var(--surface-alt);
+}
+.as-tab {
+  color: var(--muted);
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.as-tab.active {
+  color: var(--ink);
+  border-bottom: 2px solid var(--accent);
+}
+.as-tab:hover {
+  color: var(--ink);
+}
+.as-role-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+.as-role-card:hover {
+  border-color: var(--ink);
+  transform: translateY(-2px);
+}
+.as-hairline {
+  background: var(--line);
+  height: 1px;
+}
+.as-scroll::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+.as-scroll::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 3px;
+}
+input,
+select,
+textarea {
+  font-family: "IBM Plex Sans", sans-serif;
+}
+input:focus,
+select:focus,
+textarea:focus,
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.as-warning {
+  background: var(--danger-soft);
+  color: var(--danger);
+  border: 1px solid var(--danger);
+}
