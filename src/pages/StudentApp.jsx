@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import {
   RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Legend, ResponsiveContainer,
 } from "recharts";
-import { GraduationCap, CheckCircle2, Circle, Award, MapPin, Clock, Wallet } from "lucide-react";
+import { GraduationCap, CheckCircle2, Circle, Award, MapPin, Clock, Wallet, Search } from "lucide-react";
 
 import { SKILLS } from "../data/skills.js";
 import { QUIZ, OPTION_SCORES } from "../data/quiz.js";
@@ -22,6 +22,10 @@ export default function StudentApp({ user, onLogout }) {
   const [scores, setScores] = useState(null);
   const [step, setStep] = useState(0);
   const [applications, setApplications] = useState([{ id: "seed1", oppId: "op2", stage: 2 }]);
+
+  // Search + type filter for the "Internships & jobs" tab (UI-only, no data changes)
+  const [oppSearch, setOppSearch] = useState("");
+  const [oppTypeFilter, setOppTypeFilter] = useState("All");
 
   const done = Object.keys(answers).length === QUIZ.length;
 
@@ -58,6 +62,21 @@ export default function StudentApp({ user, onLogout }) {
 
   const gaps = scores ? SKILLS.filter((s) => scores[s.id] < 70) : [];
 
+  // Distinct opportunity types for the filter tabs, plus "All"
+  const oppTypes = ["All", ...Array.from(new Set(OPPORTUNITIES.map((o) => o.type)))];
+
+  // Opportunities narrowed by the current search text and type filter
+  const filteredOpps = OPPORTUNITIES.filter((o) => {
+    const matchesType = oppTypeFilter === "All" || o.type === oppTypeFilter;
+    const q = oppSearch.trim().toLowerCase();
+    const matchesSearch =
+      !q ||
+      o.title.toLowerCase().includes(q) ||
+      o.org.toLowerCase().includes(q) ||
+      o.location.toLowerCase().includes(q);
+    return matchesType && matchesSearch;
+  });
+
   const tabs = [
     { id: "assess", label: "Skill assessment" },
     { id: "profile", label: "Skill profile" },
@@ -73,21 +92,22 @@ export default function StudentApp({ user, onLogout }) {
           <SectionIntro eyebrow="Step 1" title="Tell us where you stand" sub="Six short questions across the skill areas Ayurveda employers look for. This builds your skill profile and recommendations." />
           {!scores && (
             <>
-              <div className="flex gap-1.5 mb-6">
+              <div className="flex gap-1.5 mb-6" aria-hidden="true">
                 {QUIZ.map((_, i) => (
                   <span key={i} className="h-1.5 flex-1" style={{ background: i <= step ? "var(--accent)" : "var(--line)" }} />
                 ))}
               </div>
               <div className="as-card p-6">
                 <div className="as-muted text-sm mb-1">Question {step + 1} of {QUIZ.length}</div>
-                <div className="font-semibold text-lg mb-5 leading-snug">{QUIZ[step].q}</div>
-                <div className="flex flex-col gap-2.5">
+                <div id="quiz-question" className="font-semibold text-lg mb-5 leading-snug">{QUIZ[step].q}</div>
+                <div role="radiogroup" aria-labelledby="quiz-question" className="flex flex-col gap-2.5">
                   {QUIZ[step].options.map((opt, oi) => (
                     <button
                       key={oi}
+                      role="radio"
+                      aria-checked={answers[step] === oi}
                       onClick={() => choose(step, oi)}
-                      className="as-btn-outline text-left px-4 py-3 text-sm flex items-center justify-between"
-                      style={answers[step] === oi ? { borderColor: "var(--accent)", background: "var(--accent-soft)" } : {}}
+                      className={`as-btn-outline text-left px-4 py-3 text-sm flex items-center justify-between ${answers[step] === oi ? "selected" : ""}`}
                     >
                       {opt}
                       {answers[step] === oi && <CheckCircle2 size={16} className="as-accent-text" />}
@@ -164,8 +184,34 @@ export default function StudentApp({ user, onLogout }) {
       {tab === "opps" && (
         <div>
           <SectionIntro eyebrow="Recommended for you" title="Internships & jobs" sub={scores ? "Ranked by how well your skill profile matches each posting." : "Complete the skill assessment to see your match percentage."} />
+
+          <div className="relative mb-4 max-w-md">
+            <Search size={15} className="as-muted" style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)" }} />
+            <input
+              value={oppSearch}
+              onChange={(e) => setOppSearch(e.target.value)}
+              placeholder="Search by title, organisation or location"
+              className="as-btn-outline w-full pl-8 pr-3 py-2 text-sm"
+            />
+          </div>
+
+          <div className="flex gap-2 mb-6 flex-wrap">
+            {oppTypes.map((t) => (
+              <button key={t} onClick={() => setOppTypeFilter(t)} className={`as-tab ${oppTypeFilter === t ? "active" : ""} text-sm pb-2 px-1`}>
+                {t}
+              </button>
+            ))}
+          </div>
+
           <div className="grid gap-4">
-            {[...OPPORTUNITIES]
+            {filteredOpps.length === 0 && (
+              <EmptyState
+                text="No opportunities match your search or filter."
+                action={() => { setOppSearch(""); setOppTypeFilter("All"); }}
+                actionLabel="Clear filters"
+              />
+            )}
+            {[...filteredOpps]
               .sort((a, b) => (scores ? matchScore(b.skills, scores) - matchScore(a.skills, scores) : 0))
               .map((o) => {
                 const applied = applications.find((a) => a.oppId === o.id);
