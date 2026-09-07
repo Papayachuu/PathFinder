@@ -4,6 +4,7 @@ import { LogIn, UserPlus, AlertTriangle } from "lucide-react";
 import { ROLES } from "../data/roles.js";
 import { register, login } from "../utils/auth.js";
 import BridgeMotif from "../components/BridgeMotif.jsx";
+import HowItWorks from "../components/HowItWorks.jsx";
 import Field from "../components/ui/Field.jsx";
 
 export default function AuthPage({ onAuth }) {
@@ -54,8 +55,8 @@ export default function AuthPage({ onAuth }) {
             One bridge between the classroom and the clinic.
           </h1>
           <p className="as-soft text-lg leading-relaxed max-w-md mb-8">
-            Setu means bridge. This portal connects Ayurveda students, faculty and industry so
-            skills learned in college translate into internships, placements and real practice.
+            PathFinder connects Ayurveda students, faculty and industry so skills learned in
+            college translate into internships, placements and real practice.
           </p>
           <BridgeMotif />
         </div>
@@ -132,6 +133,14 @@ export default function AuthPage({ onAuth }) {
             </form>
           )}
         </div>
+      </div>
+
+      <div className="as-hairline my-14" />
+
+      <div>
+        <div className="as-muted text-xs uppercase tracking-wide mb-1">How it works</div>
+        <h2 className="as-serif text-2xl font-semibold mb-6">From classroom skill to verified placement</h2>
+        <HowItWorks />
       </div>
     </div>
   );
